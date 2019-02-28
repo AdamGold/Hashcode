@@ -11,8 +11,16 @@ def getTags(item):
     return set(allPhotos[item])
 
 
-def calculate(node):
-    pass
+visited = []
+
+
+def move_to_node(node):
+    if node in visited:
+        return
+    print(f"{node} ->")
+    edges = list(G.edges(node, data=True))
+    visited.append(node)
+    move_to_node(edges[0][1])
 
 
 if __name__ == "__main__":
@@ -32,11 +40,7 @@ if __name__ == "__main__":
 
     verticalCombinations = set(itertools.combinations(verticals, r=2))
 
-    pprint(f"horizontals: {horizontal}")
-    pprint(f"verticals: {verticalCombinations}")
-
     connections = horizontal.union(verticalCombinations)
-    print(connections)
     for item in connections:
         tags = getTags(item)
         G.add_node(item)
@@ -49,21 +53,10 @@ if __name__ == "__main__":
                 len(inters),
                 min((len(other_tags) - len(inters)), len(tags) - len(inters)),
             )
-            print(f"{item} - {other_item}:")
-            print(math)
             G.add_edge(item, other_item, weight=math)
 
-    pprint(list(G.nodes()))
-    pprint(list(G.edges(data=True)))
-
-    print("recursion")
     for node in G.nodes():
-        edges = G.edges(node, data=True)
-        print(edges)
-        for edge in G.get_edge_data(*edge):
-            pass
-        print(node)
-        print(weights)
+        move_to_node(node)
     # print(nx.max_weight_matching(G))
     # print(nx.algorithms.shortest_paths.weighted.dijkstra_path(G, 0, (1, 2)))
     # nx.draw(G, with_labels=True, font_weight="bold")
