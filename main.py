@@ -26,21 +26,21 @@ def move_to_node(node):
 if __name__ == "__main__":
     G = nx.Graph()
     allPhotos = {}
-    horizontal = set()
-    verticals = set()
+    horizontal = []
+    verticals = []
     with open(sys.argv[1], "r") as f:
         for index, line in enumerate(f):
             direction = line[0]
             line = line[:-1]
             allPhotos[index - 1] = line[line.find(" ", 2) + 1 :].split(" ")
             if direction == "H":
-                horizontal.add(index - 1)
+                horizontal.append(index - 1)
             elif direction == "V":
-                verticals.add(index - 1)
+                verticals.append(index - 1)
 
-    verticalCombinations = set(itertools.combinations(verticals, r=2))
+    verticalCombinations = list(itertools.combinations(verticals, r=2))
 
-    connections = horizontal.union(verticalCombinations)
+    connections = horizontal + verticalCombinations
     for item in connections:
         tags = getTags(item)
         G.add_node(item)
